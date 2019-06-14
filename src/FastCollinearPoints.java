@@ -2,6 +2,7 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class FastCollinearPoints {
@@ -12,16 +13,16 @@ public class FastCollinearPoints {
 
         int counter = 0;
         for (int i = 0; i < points.length; i++) {
-            sort(points, i);
+            //  sort(points, i);
         }
     }
 
     public int numberOfSegments() {
-
+        return 0;
     }
 
     public LineSegment[] segments() {
-
+        return null;
     }
 
     public static void main(String[] args) {
@@ -54,9 +55,9 @@ public class FastCollinearPoints {
         StdDraw.show();
     }
 
-    private LineSegment sort(Point[] points, int index, Comparator<Point> comparator) { //todo change linesegment to tuple
-       Point[] aux = new Point[points.length];
-       sort(points, aux, 0, points.length - 1, comparator);
+    private void sort(Point[] points, int index, Comparator<Point> comparator) { //todo change linesegment to tuple
+        Point[] aux = new Point[points.length];
+        sort(points, aux, 0, points.length - 1, comparator);
     }
 
     private void sort(Point[] a, Point[] aux, int low, int high, Comparator<Point> comparator) {
@@ -71,6 +72,7 @@ public class FastCollinearPoints {
     }
 
     private void merge(Point[] a, Point[] aux, int low, int mid, int high, Comparator<Point> comparator) {
+
         for (int i = low; i <= high; i++) {
             aux[i] = a[i];
         }
@@ -83,7 +85,7 @@ public class FastCollinearPoints {
                 a[k] = aux[j++];
             } else if (j > high) {
                 a[k] = aux[i++];
-            } else if (comparator.compare(aux[i], aux[j]) > 0) {
+            } else if (comparator.thenComparing(Point::compareTo).compare(aux[i], aux[j]) > 0) {
                 a[k] = aux[j++];
             } else {
                 a[k] = aux[i++];
