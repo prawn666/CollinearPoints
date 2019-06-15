@@ -28,8 +28,10 @@ public class FastCollinearPoints {
             Point last = null;
             for (int j = 1; j < sortedBySlope.length; j++) {
 
-                if (sortedBySlope[j - 1].slopeTo(sorted[i]) == sortedBySlope[j].slopeTo(sorted[i])
-                        && sorted[i].compareTo(sortedBySlope[j - 1]) < 0) {
+                if (Double.compare(sortedBySlope[j - 1].slopeTo(sorted[i]), sortedBySlope[j].slopeTo(sorted[i])) == 0) {
+                    if (sorted[i].compareTo(sortedBySlope[j - 1]) > 0) {
+                        break;
+                    }
                     count++;
                     if (max < count) {
                         max = count;
@@ -135,4 +137,5 @@ public class FastCollinearPoints {
             }
         }
     }
+
 }

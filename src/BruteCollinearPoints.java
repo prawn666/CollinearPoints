@@ -9,6 +9,31 @@ public class BruteCollinearPoints {
 
     private final LineSegment[] lineSegments;
 
+    public BruteCollinearPoints(Point[] points) {
+        if (points == null) {
+            throw new IllegalArgumentException();
+        }
+        Point[] sorted = points.clone();
+        checkNull(sorted);
+        Arrays.sort(sorted);
+        checkUnique(sorted);
+        ArrayList<LineSegment> lineSegmentArrayList = new ArrayList<>();
+        for (int i = 0; i < sorted.length; i++) {
+            for (int j = i + 1; j < sorted.length; j++) {
+                for (int k = j + 1; k < sorted.length; k++) {
+                    if (Double.compare(sorted[i].slopeTo(sorted[j]), sorted[j].slopeTo(sorted[k])) == 0) {
+                        for (int i1 = k + 1; i1 < sorted.length; i1++) {
+                            if (Double.compare(sorted[i].slopeTo(sorted[j]), sorted[k].slopeTo(sorted[i1])) == 0) {
+                                lineSegmentArrayList.add(new LineSegment(sorted[i], sorted[i1]));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        lineSegments = lineSegmentArrayList.toArray(new LineSegment[0]);
+    }
+
     public static void main(String[] args) {
 
         // read the n points from a file
@@ -37,31 +62,6 @@ public class BruteCollinearPoints {
             segment.draw();
         }
         StdDraw.show();
-    }
-
-    public BruteCollinearPoints(Point[] points) {
-        if (points == null) {
-            throw new IllegalArgumentException();
-        }
-        Point[] sorted = points.clone();
-        Arrays.sort(sorted);
-        checkNull(sorted);
-        checkUnique(sorted);
-        ArrayList<LineSegment> lineSegmentArrayList = new ArrayList<>();
-        for (int i = 0; i < sorted.length; i++) {
-            for (int j = i + 1; j < sorted.length; j++) {
-                for (int k = j + 1; k < sorted.length; k++) {
-                    if (Double.compare(sorted[i].slopeTo(sorted[j]), sorted[j].slopeTo(sorted[k])) == 0) {
-                        for (int i1 = k + 1; i1 < sorted.length; i1++) {
-                            if (Double.compare(sorted[i].slopeTo(sorted[j]), sorted[k].slopeTo(sorted[i1])) == 0) {
-                                lineSegmentArrayList.add(new LineSegment(sorted[i], sorted[i1]));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        lineSegments = lineSegmentArrayList.toArray(new LineSegment[0]);
     }
 
     public int numberOfSegments() {
