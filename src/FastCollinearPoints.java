@@ -5,6 +5,7 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedList;
 
 public class FastCollinearPoints {
 
@@ -25,7 +26,7 @@ public class FastCollinearPoints {
             Arrays.sort(sortedBySlope, sorted[i].slopeOrder().thenComparing(Point::compareTo));
             int count = 0;
             int max = 0;
-            Point last = null;
+            LinkedList<Point> lastLinked = new LinkedList<>();
             for (int j = 1; j < sortedBySlope.length; j++) {
 
                 if (Double.compare(sortedBySlope[j - 1].slopeTo(sorted[i]), sortedBySlope[j].slopeTo(sorted[i])) == 0) {
@@ -35,14 +36,19 @@ public class FastCollinearPoints {
                     count++;
                     if (max < count) {
                         max = count;
-                        last = sortedBySlope[j];
+                        lastLinked.clear();
+                        lastLinked.addFirst(sortedBySlope[j]);
+                    } else if (max == count) {
+                        lastLinked.addFirst(sortedBySlope[j]);
                     }
                 } else {
                     count = 0;
                 }
             }
             if (max >= 2) {
-                lineSegmentArrayList.add(new LineSegment(sorted[i], last));
+                for (Point elem : lastLinked) {
+                    lineSegmentArrayList.add(new LineSegment(sorted[i], elem));
+                }
             }
         }
 
