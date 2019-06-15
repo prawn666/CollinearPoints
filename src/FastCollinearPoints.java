@@ -15,38 +15,33 @@ public class FastCollinearPoints {
             throw new IllegalArgumentException();
         }
         ArrayList<LineSegment> lineSegmentArrayList = new ArrayList<>();
-        Arrays.sort(points);
-        checkNull(points);
-        checkUnique(points);
-        for (int i = 0; i < points.length; i++) {
-//            LineSegment lineSegment =
-//                    sort(points.clone(), points[i].slopeOrder().thenComparing(Point::compareTo), points[i]);
+        Point[] sorted = points.clone();
+        Point[] sortedBySlope = points.clone();
+        Arrays.sort(sorted);
+        checkNull(sorted);
+        checkUnique(sorted);
 
-//            if (lineSegment != null) {
-//                lineSegmentArrayList.add(lineSegment);
-//            }
-            Point[] sortedBySlope = points.clone();
-            Arrays.sort(sortedBySlope, points[i].slopeOrder());
-            Point last = null;
+        for (int i = 0; i < sorted.length; i++) {
+            Arrays.sort(sortedBySlope, sorted[i].slopeOrder().thenComparing(Point::compareTo));
             int count = 0;
             int max = 0;
+            Point last = null;
+            for (int j = 1; j < sortedBySlope.length; j++) {
 
-            for (int j = 0; j < sortedBySlope.length - 1; j++) {
-                if (Double.compare(sortedBySlope[j].slopeTo(points[i]), sortedBySlope[j + 1].slopeTo(points[i])) == 0) {
+                if (sortedBySlope[j - 1].slopeTo(sorted[i]) == sortedBySlope[j].slopeTo(sorted[i])
+                        && sorted[i].compareTo(sortedBySlope[j - 1]) < 0) {
                     count++;
+                    if (max < count) {
+                        max = count;
+                        last = sortedBySlope[j];
+                    }
                 } else {
                     count = 0;
                 }
-                if (count > max) {
-                    max = count;
-                    last = sortedBySlope[j+1];
-                }
             }
             if (max >= 2) {
-                lineSegmentArrayList.add(new LineSegment(points[i], last));
+                lineSegmentArrayList.add(new LineSegment(sorted[i], last));
             }
-          //  points[i] = null;
-
         }
 
         lineSegments = lineSegmentArrayList.toArray(new LineSegment[0]);
@@ -89,39 +84,6 @@ public class FastCollinearPoints {
             segment.draw();
         }
         StdDraw.show();
-    }
-
-    private LineSegment sort(Point[] points, Comparator<Point> comparator, Point point) {
-        Point[] aux = new Point[points.length];
-        sort(points, aux, 0, points.length - 1, comparator);
-        System.out.println(point);
-        for (int i = 0; i < points.length; i++) {
-            System.out.println(point.slopeTo(points[i]));
-        }
-        System.out.println();
-
-        Point last = null;
-        int count = 0;
-        int max = 0;
-
-        for (int i = 0; i < points.length - 1; i++) {
-            if (Double.compare(points[i].slopeTo(point), points[i + 1].slopeTo(point)) == 0) {
-                count++;
-            } else {
-                count = 0;
-            }
-            if (count > max) {
-                max = count;
-                last = points[i+1];
-            }
-        }
-
-        if (max >= 2) {
-            return new LineSegment(point, last);
-        }
-
-        return null;
-
     }
 
     private void sort(Point[] a, Point[] aux, int low, int high, Comparator<Point> comparator) {
