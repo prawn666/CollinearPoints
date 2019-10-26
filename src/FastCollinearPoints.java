@@ -26,14 +26,24 @@ public class FastCollinearPoints {
             Arrays.sort(sortedBySlope, sorted[i].slopeOrder().thenComparing(Point::compareTo));
             int count = 0;
             int max = 0;
+            boolean flag = false;
             LinkedList<Point> lastLinked = new LinkedList<>();
             for (int j = 1; j < sortedBySlope.length; j++) {
 
                 if (Double.compare(sortedBySlope[j - 1].slopeTo(sorted[i]), sortedBySlope[j].slopeTo(sorted[i])) == 0) {
-                    if (sorted[i].compareTo(sortedBySlope[j - 1]) > 0) {
-                        break;
+                    if (sorted[i].compareTo(sortedBySlope[j - 1]) > 0 || flag) {
+                        count = 0;
+                        flag = true;
+                        continue;
                     }
                     count++;
+
+
+                    if (sortedBySlope[j - 1].compareTo(new Point(4600, 8200)) == 0) {
+                        System.out.println();
+                    }
+
+
                     if (max < count) {
                         max = count;
                         lastLinked.clear();
@@ -41,8 +51,10 @@ public class FastCollinearPoints {
                     } else if (max == count) {
                         lastLinked.addFirst(sortedBySlope[j]);
                     }
+
                 } else {
                     count = 0;
+                    flag = false;
                 }
             }
             if (max >= 2) {
